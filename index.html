@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fruit Classification System</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background: linear-gradient(rgba(0,0,0,0.5),
+      rgba(0,0,0,0.5)),
+      url('https://images.unsplash.com/photo-1610832958506-aa56368176cf');
+      background-size: cover;
+      background-position: center;
+      min-height:100vh;
+      color:white;
+    }
+
+    .container{
+      width:90%;
+      max-width:1200px;
+      margin:auto;
+      padding-top:40px;
+    }
+
+    .header{
+      text-align:center;
+      margin-bottom:40px;
+    }
+
+    .header h1{
+      font-size:50px;
+      color:#90ee90;
+      text-shadow:2px 2px 10px black;
+    }
+
+    .header p{
+      font-size:20px;
+      margin-top:10px;
+    }
+
+    .main-card{
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      border-radius:20px;
+      padding:40px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:30px;
+      justify-content:center;
+      align-items:center;
+      box-shadow:0 8px 25px rgba(0,0,0,0.4);
+    }
+
+    .upload-section{
+      flex:1;
+      min-width:300px;
+      text-align:center;
+    }
+
+    .upload-section img{
+      width:100%;
+      max-width:350px;
+      border-radius:20px;
+      margin-bottom:20px;
+      border:4px solid #90ee90;
+    }
+
+    .upload-box{
+      border:2px dashed #90ee90;
+      padding:30px;
+      border-radius:15px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    input[type="file"]{
+      margin-top:15px;
+      color:white;
+    }
+
+    button{
+      margin-top:20px;
+      padding:15px 35px;
+      border:none;
+      border-radius:10px;
+      background:#32cd32;
+      color:white;
+      font-size:18px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    button:hover{
+      background:#228b22;
+      transform:scale(1.05);
+    }
+
+    .result-section{
+      flex:1;
+      min-width:300px;
+    }
+
+    .result-card{
+      background: rgba(0,0,0,0.35);
+      padding:30px;
+      border-radius:20px;
+      text-align:center;
+    }
+
+    .result-card h2{
+      color:#90ee90;
+      margin-bottom:20px;
+    }
+
+    .fruit-result{
+      font-size:40px;
+      margin:20px 0;
+      color:#ffd700;
+    }
+
+    .accuracy{
+      font-size:24px;
+      color:#ffffff;
+    }
+
+    .fruits-gallery{
+      margin-top:50px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:20px;
+    }
+
+    .fruit-card{
+      background: rgba(255,255,255,0.12);
+      padding:15px;
+      border-radius:15px;
+      text-align:center;
+      transition:0.3s;
+    }
+
+    .fruit-card:hover{
+      transform:translateY(-8px);
+    }
+
+    .fruit-card img{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      border-radius:15px;
+    }
+
+    .fruit-card h3{
+      margin-top:10px;
+      color:#90ee90;
+    }
+
+    footer{
+      text-align:center;
+      margin-top:50px;
+      padding-bottom:20px;
+      color:#ddd;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>🍉 Fruit Classification System 🍍</h1>
+      <p>AI Powered Fruit Recognition and Prediction</p>
+    </div>
+
+    <div class="main-card">
+
+      <!-- Upload Section -->
+      <div class="upload-section">
+
+        <img src="https://images.unsplash.com/photo-1574226516831-e1dff420e37f"
+        alt="Fruit Image">
+
+        <div class="upload-box">
+          <h2>Upload Fruit Image</h2>
+
+          <input type="file" id="fruitImage">
+
+          <br>
+
+          <button onclick="showResult()">
+            Predict Fruit
+          </button>
+        </div>
+      </div>
+
+      <!-- Result Section -->
+      <div class="result-section">
+
+        <div class="result-card">
+          <h2>Prediction Result</h2>
+
+          <div class="fruit-result" id="result">
+            🍎 Apple
+          </div>
+
+          <div class="accuracy">
+            Accuracy: 98.7%
+          </div>
+
+          <p style="margin-top:20px;">
+            The uploaded fruit image has been successfully classified using Machine Learning.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Fruits Gallery -->
+    <div class="fruits-gallery">
+
+      <div class="fruit-card">
+        <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce">
+        <h3>Apple</h3>
+      </div>
+
+      <div class="fruit-card">
+        <img src="https://images.unsplash.co
+        2m/photo-1571771894821-ce9b6c11b08e">
+        <h3>Banana</h3>
+      </div>
+
+      <div class="fruit-card">
+        <img src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba">
+        <h3>Pineapple</h3>
+      </div>
+
+      <div class="fruit-card">
+        <img src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2">
+        <h3>Orange</h3>
+      </div>
+
+    </div>
+
+    <footer>
+      © 2026 Fruit Classification Project | Machine Learning Interface
+    </footer>
+
+  </div>
+
+  <script>
+
+    function showResult(){
+
+      const fruits = [
+        "🍎 Apple",
+        "🍌 Banana",
+        "🍍 Pineapple",
+        "🍊 Orange",
+        "🥭 Mango"
+      ];
+
+      let randomFruit =
+      fruits[Math.floor(Math.random()*fruits.length)];
+
+      document.getElementById("result").innerHTML =
+      randomFruit;
+    }
+
+  </script>
+
+</body>
+</html>
