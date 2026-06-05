@@ -1,280 +1,513 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fruit Classification System</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fruit Classifier | Numeric Feature Prediction</title>
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family: Arial, sans-serif;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
     }
 
-    body{
-      background: linear-gradient(rgba(0,0,0,0.5),
-      rgba(0,0,0,0.5)),
-      url('https://images.unsplash.com/photo-1610832958506-aa56368176cf');
+    body {
+      background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)),
+                  url('https://images.unsplash.com/photo-1610832958506-aa56368176cf');
       background-size: cover;
       background-position: center;
-      min-height:100vh;
-      color:white;
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: white;
+      padding: 2rem 1rem;
     }
 
-    .container{
-      width:90%;
-      max-width:1200px;
-      margin:auto;
-      padding-top:40px;
+    .container {
+      width: 90%;
+      max-width: 1300px;
+      margin: auto;
     }
 
-    .header{
-      text-align:center;
-      margin-bottom:40px;
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
     }
 
-    .header h1{
-      font-size:50px;
-      color:#90ee90;
-      text-shadow:2px 2px 10px black;
+    .header h1 {
+      font-size: 50px;
+      color: #90ee90;
+      text-shadow: 2px 2px 15px black;
+      letter-spacing: 1px;
     }
 
-    .header p{
-      font-size:20px;
-      margin-top:10px;
+    .header p {
+      font-size: 20px;
+      margin-top: 10px;
+      font-weight: 500;
+      text-shadow: 1px 1px 4px black;
     }
 
-    .main-card{
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(10px);
-      border-radius:20px;
-      padding:40px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:30px;
-      justify-content:center;
-      align-items:center;
-      box-shadow:0 8px 25px rgba(0,0,0,0.4);
+    .main-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      border-radius: 30px;
+      padding: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      align-items: stretch;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .upload-section{
-      flex:1;
-      min-width:300px;
-      text-align:center;
+    .form-section {
+      flex: 1;
+      min-width: 320px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 24px;
+      padding: 28px 24px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(144, 238, 144, 0.4);
     }
 
-    .upload-section img{
-      width:100%;
-      max-width:350px;
-      border-radius:20px;
-      margin-bottom:20px;
-      border:4px solid #90ee90;
+    .form-section h2 {
+      color: #90ee90;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
     }
 
-    .upload-box{
-      border:2px dashed #90ee90;
-      padding:30px;
-      border-radius:15px;
-      background: rgba(255,255,255,0.08);
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 20px;
+      margin-bottom: 28px;
     }
 
-    input[type="file"]{
-      margin-top:15px;
-      color:white;
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    button{
-      margin-top:20px;
-      padding:15px 35px;
-      border:none;
-      border-radius:10px;
-      background:#32cd32;
-      color:white;
-      font-size:18px;
-      cursor:pointer;
-      transition:0.3s;
+    .input-group.full-width {
+      grid-column: span 2;
     }
 
-    button:hover{
-      background:#228b22;
-      transform:scale(1.05);
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #e0f0e0;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .result-section{
-      flex:1;
-      min-width:300px;
+    input, select {
+      background: rgba(30, 30, 40, 0.8);
+      border: 1px solid #90ee90;
+      border-radius: 40px;
+      padding: 12px 16px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s;
     }
 
-    .result-card{
-      background: rgba(0,0,0,0.35);
-      padding:30px;
-      border-radius:20px;
-      text-align:center;
+    input:focus, select:focus {
+      border-color: #ffd966;
+      box-shadow: 0 0 8px #ffd966;
+      background: rgba(0, 0, 0, 0.7);
     }
 
-    .result-card h2{
-      color:#90ee90;
-      margin-bottom:20px;
+    input::placeholder {
+      color: #bcbcbc;
     }
 
-    .fruit-result{
-      font-size:40px;
-      margin:20px 0;
-      color:#ffd700;
+    select option {
+      background: #1f2a2e;
     }
 
-    .accuracy{
-      font-size:24px;
-      color:#ffffff;
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 50px;
+      background: #32cd32;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.25s;
+      margin-top: 8px;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .fruits-gallery{
-      margin-top:50px;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:20px;
+    button:hover {
+      background: #28a428;
+      transform: scale(1.02);
+      box-shadow: 0 8px 18px black;
     }
 
-    .fruit-card{
-      background: rgba(255,255,255,0.12);
-      padding:15px;
-      border-radius:15px;
-      text-align:center;
-      transition:0.3s;
+    button:active {
+      transform: scale(0.98);
     }
 
-    .fruit-card:hover{
-      transform:translateY(-8px);
+    .result-section {
+      flex: 1;
+      min-width: 280px;
     }
 
-    .fruit-card img{
-      width:100%;
-      height:180px;
-      object-fit:cover;
-      border-radius:15px;
+    .result-card {
+      background: rgba(0, 0, 0, 0.55);
+      padding: 30px 20px;
+      border-radius: 28px;
+      text-align: center;
+      height: 100%;
+      backdrop-filter: blur(5px);
+      border: 1px solid #90ee90;
     }
 
-    .fruit-card h3{
-      margin-top:10px;
-      color:#90ee90;
+    .result-card h2 {
+      color: #90ee90;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
     }
 
-    footer{
-      text-align:center;
-      margin-top:50px;
-      padding-bottom:20px;
-      color:#ddd;
+    .fruit-result {
+      font-size: 44px;
+      margin: 20px 0;
+      color: #ffd966;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #2c5a2c;
     }
 
+    .accuracy {
+      font-size: 1.1rem;
+      color: #ffffff;
+      background: rgba(50, 205, 50, 0.25);
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 40px;
+      margin-top: 8px;
+    }
+
+    .fruits-gallery {
+      margin-top: 50px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 25px;
+    }
+
+    .fruit-card {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 16px;
+      border-radius: 24px;
+      text-align: center;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+    }
+
+    .fruit-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .fruit-card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 2px solid #90ee90;
+    }
+
+    .fruit-card h3 {
+      margin-top: 12px;
+      color: #ffd966;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 55px;
+      padding-bottom: 20px;
+      color: #cbd5e1;
+      font-size: 0.85rem;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 50%;
+      border-top-color: #f9c851;
+      animation: spin 0.7s linear infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-msg {
+      margin-top: 15px;
+      background: rgba(220, 60, 50, 0.7);
+      border-radius: 40px;
+      padding: 8px;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 780px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .input-group.full-width {
+        grid-column: span 1;
+      }
+      .main-card {
+        padding: 25px;
+      }
+      .fruit-result {
+        font-size: 32px;
+      }
+      .header h1 {
+        font-size: 36px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-
-    <div class="header">
-      <h1>🍉 Fruit Classification System 🍍</h1>
-      <p>AI Powered Fruit Recognition and Prediction</p>
-    </div>
-
-    <div class="main-card">
-
-      <!-- Upload Section -->
-      <div class="upload-section">
-
-        <img src="https://images.unsplash.com/photo-1574226516831-e1dff420e37f"
-        alt="Fruit Image">
-
-        <div class="upload-box">
-          <h2>Upload Fruit Image</h2>
-
-          <input type="file" id="fruitImage">
-
-          <br>
-
-          <button onclick="showResult()">
-            Predict Fruit
-          </button>
-        </div>
-      </div>
-
-      <!-- Result Section -->
-      <div class="result-section">
-
-        <div class="result-card">
-          <h2>Prediction Result</h2>
-
-          <div class="fruit-result" id="result">
-            🍎 Apple
-          </div>
-
-          <div class="accuracy">
-            Accuracy: 98.7%
-          </div>
-
-          <p style="margin-top:20px;">
-            The uploaded fruit image has been successfully classified using Machine Learning.
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Fruits Gallery -->
-    <div class="fruits-gallery">
-
-      <div class="fruit-card">
-        <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce">
-        <h3>Apple</h3>
-      </div>
-
-      <div class="fruit-card">
-        <img src="https://images.unsplash.co
-        2m/photo-1571771894821-ce9b6c11b08e">
-        <h3>Banana</h3>
-      </div>
-
-      <div class="fruit-card">
-        <img src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba">
-        <h3>Pineapple</h3>
-      </div>
-
-      <div class="fruit-card">
-        <img src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2">
-        <h3>Orange</h3>
-      </div>
-
-    </div>
-
-    <footer>
-      © 2026 Fruit Classification Project | Machine Learning Interface
-    </footer>
-
+<div class="container">
+  <div class="header">
+    <h1>🍇 Fruit Classification System 🍊</h1>
+    <p>✨ AI Powered · Enter fruit features → Instant numeric prediction ✨</p>
   </div>
 
-  <script>
+  <div class="main-card">
+    <!-- FEATURE FORM SECTION (numeric encoding) -->
+    <div class="form-section">
+      <h2>📊 Fruit Characteristics</h2>
+      <form id="fruitFeatureForm">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>📏 Size (cm)</label>
+            <input type="number" step="any" id="size" placeholder="e.g., 8.5" required>
+          </div>
+          <div class="input-group">
+            <label>🍃 Shape</label>
+            <select id="shape" required>
+              <option value="2">Round (2)</option>
+              <option value="1">Oval (1)</option>
+              <option value="0">Long (0)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>⚖️ Weight (g)</label>
+            <input type="number" step="any" id="weight" placeholder="e.g., 174.6" required>
+          </div>
+          <div class="input-group">
+            <label>💰 Avg Price (₹)</label>
+            <input type="number" step="any" id="price" placeholder="e.g., 65.5" required>
+          </div>
+          <div class="input-group">
+            <label>🎨 Color</label>
+            <select id="color" required>
+              <option value="0">Blue (0)</option>
+              <option value="1">Brown (1)</option>
+              <option value="2">Green (2)</option>
+              <option value="3">Orange (3)</option>
+              <option value="4">Pink (4)</option>
+              <option value="5">Purple (5)</option>
+              <option value="6">Red (6)</option>
+              <option value="7">Yellow (7)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>🍬 Taste</label>
+            <select id="taste" required>
+              <option value="1">Sweet (1)</option>
+              <option value="2">Tangy (2)</option>
+              <option value="0">Sour (0)</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" id="predictBtn">🔮 PREDICT FRUIT 🔮</button>
+      </form>
+    </div>
 
-    function showResult(){
+    <!-- RESULT SECTION -->
+    <div class="result-section">
+      <div class="result-card">
+        <h2>🍍 Prediction Result</h2>
+        <div class="fruit-result" id="resultFruit">
+          —
+        </div>
+        <div class="accuracy" id="accuracyMsg">
+          Enter details & predict
+        </div>
+        <p style="margin-top: 20px; font-size: 0.9rem;">
+          Using exact integer codes (shape, color, taste) as per trained model
+        </p>
+      </div>
+    </div>
+  </div>
 
-      const fruits = [
-        "🍎 Apple",
-        "🍌 Banana",
-        "🍍 Pineapple",
-        "🍊 Orange",
-        "🥭 Mango"
-      ];
+  <!-- FRUITS GALLERY (original style) -->
+  <div class="fruits-gallery">
+    <div class="fruit-card">
+      <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce" alt="apple">
+      <h3>Apple</h3>
+    </div>
+    <div class="fruit-card">
+      <img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e" alt="banana">
+      <h3>Banana</h3>
+    </div>
+    <div class="fruit-card">
+      <img src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba" alt="pineapple">
+      <h3>Pineapple</h3>
+    </div>
+    <div class="fruit-card">
+      <img src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2" alt="orange">
+      <h3>Orange</h3>
+    </div>
+  </div>
 
-      let randomFruit =
-      fruits[Math.floor(Math.random()*fruits.length)];
+  <footer>
+    🌟 Fruit Classification | FastAPI Backend | Logistic Regression (100% test accuracy) 🌟
+  </footer>
+</div>
 
-      document.getElementById("result").innerHTML =
-      randomFruit;
+<script>
+  // API endpoint that expects numeric features (size, shape_code, weight, price, color_code, taste_code)
+  const API_URL = 'http://127.0.0.1:8000/predict_fruit_name';
+
+  const form = document.getElementById('fruitFeatureForm');
+  const predictBtn = document.getElementById('predictBtn');
+  const resultDiv = document.getElementById('resultFruit');
+  const accuracySpan = document.getElementById('accuracyMsg');
+
+  function setLoading(isLoading) {
+    if (isLoading) {
+      predictBtn.disabled = true;
+      predictBtn.innerHTML = '⏳ PREDICTING ... <span class="loader"></span>';
+      resultDiv.innerHTML = '🤔 ...';
+      accuracySpan.innerHTML = 'Contacting AI model ...';
+    } else {
+      predictBtn.disabled = false;
+      predictBtn.innerHTML = '🔮 PREDICT FRUIT 🔮';
+    }
+  }
+
+  function showError(message) {
+    resultDiv.innerHTML = '⚠️ Error';
+    accuracySpan.innerHTML = message;
+    accuracySpan.style.color = '#ffb4a2';
+    setTimeout(() => {
+      accuracySpan.style.color = '#ffffff';
+    }, 2800);
+  }
+
+  async function handlePredict(event) {
+    event.preventDefault();
+
+    // get numeric values
+    const size = parseFloat(document.getElementById('size').value);
+    const shapeCode = parseInt(document.getElementById('shape').value, 10);
+    const weight = parseFloat(document.getElementById('weight').value);
+    const price = parseFloat(document.getElementById('price').value);
+    const colorCode = parseInt(document.getElementById('color').value, 10);
+    const tasteCode = parseInt(document.getElementById('taste').value, 10);
+
+    // validation
+    if (isNaN(size) || size <= 0) {
+      showError('❌ Enter a valid positive size (cm)');
+      return;
+    }
+    if (isNaN(weight) || weight <= 0) {
+      showError('❌ Weight must be > 0 (grams)');
+      return;
+    }
+    if (isNaN(price) || price <= 0) {
+      showError('❌ Price must be > 0 (₹)');
+      return;
+    }
+    if (![0,1,2].includes(shapeCode)) {
+      showError('Shape code invalid (use 0,1,2)');
+      return;
+    }
+    if (![0,1,2,3,4,5,6,7].includes(colorCode)) {
+      showError('Color code invalid (0-7)');
+      return;
+    }
+    if (![0,1,2].includes(tasteCode)) {
+      showError('Taste code invalid (0,1,2)');
+      return;
     }
 
-  </script>
+    const payload = {
+      size: size,
+      shape: shapeCode,
+      weight: weight,
+      avg_price: price,
+      color: colorCode,
+      taste: tasteCode
+    };
 
+    setLoading(true);
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        let errDetail = `Server error (${response.status})`;
+        try {
+          const errData = await response.json();
+          errDetail = errData.detail || errDetail;
+        } catch(e) {}
+        throw new Error(errDetail);
+      }
+
+      const data = await response.json();
+      if (data && data.predicted_fruit) {
+        let fruit = data.predicted_fruit;
+        // capitalize each word
+        fruit = fruit.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        resultDiv.innerHTML = `🍍 ${fruit} 🍑`;
+        accuracySpan.innerHTML = `✅ Prediction successful | Model: Logistic Regression (100% test accuracy)`;
+        accuracySpan.style.color = '#ccffcc';
+        setTimeout(() => { accuracySpan.style.color = '#ffffff'; }, 1800);
+      } else {
+        throw new Error('Invalid API response structure');
+      }
+    } catch (error) {
+      console.error('Prediction error:', error);
+      let friendly = '⚠️ Cannot connect to FastAPI backend. Make sure server is running on port 8000 (uvicorn fruit_main:app --reload)';
+      if (error.message.includes('Failed to fetch')) {
+        friendly = '🔌 Backend unreachable. Please start the API server.';
+      } else {
+        friendly = `❌ Error: ${error.message}`;
+      }
+      showError(friendly);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  form.addEventListener('submit', handlePredict);
+</script>
 </body>
 </html>
