@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Return Prediction</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102,126,234,0.2);
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            text-align: center;
+            display: none;
+        }
+        .result.visible {
+            display: block;
+        }
+        .result h3 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+        .prediction {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .returning {
+            color: #28a745;
+        }
+        .new {
+            color: #dc3545;
+        }
+        .confidence {
+            font-size: 18px;
+            color: #555;
+        }
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        hr {
+            margin: 20px 0;
+            border: 0;
+            height: 1px;
+            background: #eee;
+        }
+        .note {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .form-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛒 Customer Return Predictor</h1>
+    <div class="subtitle">Enter e‑commerce session details to predict if the customer will return</div>
+
+    <form id="predictionForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Age (18-75)</label>
+                <input type="number" id="Age" min="18" max="75" required>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select id="Gender" required>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <select id="City" required>
+                    <option value="Adana">Adana</option>
+                    <option value="Ankara">Ankara</option>
+                    <option value="Antalya">Antalya</option>
+                    <option value="Bursa">Bursa</option>
+                    <option value="Eskisehir">Eskisehir</option>
+                    <option value="Gaziantep">Gaziantep</option>
+                    <option value="Istanbul">Istanbul</option>
+                    <option value="Izmir">Izmir</option>
+                    <option value="Kayseri">Kayseri</option>
+                    <option value="Konya">Konya</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Product Category</label>
+                <select id="Product_Category" required>
+                    <option value="Beauty">Beauty</option>
+                    <option value="Books">Books</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Food">Food</option>
+                    <option value="Home & Garden">Home & Garden</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Toys">Toys</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Unit Price (USD)</label>
+                <input type="number" id="Unit_Price" step="any" min="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Quantity (1-5)</label>
+                <input type="number" id="Quantity" min="1" max="5" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Discount Amount (USD)</label>
+                <input type="number" id="Discount_Amount" step="any" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Total Amount (USD)</label>
+                <input type="number" id="Total_Amount" step="any" min="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select id="Payment_Method" required>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Cash on Delivery">Cash on Delivery</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="Digital Wallet">Digital Wallet</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Device Type</label>
+                <select id="Device_Type" required>
+                    <option value="Desktop">Desktop</option>
+                    <option value="Mobile">Mobile</option>
+                    <option value="Tablet">Tablet</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Session Duration (minutes)</label>
+                <input type="number" id="Session_Duration_Minutes" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Pages Viewed</label>
+                <input type="number" id="Pages_Viewed" min="1" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Delivery Time (days)</label>
+                <input type="number" id="Delivery_Time_Days" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Customer Rating (1-5)</label>
+                <input type="number" id="Customer_Rating" min="1" max="5" required>
+            </div>
+            <div class="form-group">
+                <!-- placeholder for alignment -->
+            </div>
+        </div>
+
+        <button type="submit">🔍 Predict</button>
+    </form>
+
+    <div id="result" class="result">
+        <h3>Prediction Result</h3>
+        <div id="predictionText" class="prediction"></div>
+        <div id="confidenceText" class="confidence"></div>
+        <div id="errorMessage" class="error"></div>
+    </div>
+    <div class="note">
+        ⚡ Powered by XGBoost | Model trained on e‑commerce customer data.
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('predictionForm');
+    const resultDiv = document.getElementById('result');
+    const predictionText = document.getElementById('predictionText');
+    const confidenceText = document.getElementById('confidenceText');
+    const errorMsg = document.getElementById('errorMessage');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Hide previous result and clear error
+        resultDiv.classList.remove('visible');
+        errorMsg.innerText = '';
+
+        // Collect data from form
+        const data = {
+            Age: parseInt(document.getElementById('Age').value),
+            Gender: document.getElementById('Gender').value,
+            City: document.getElementById('City').value,
+            Product_Category: document.getElementById('Product_Category').value,
+            Unit_Price: parseFloat(document.getElementById('Unit_Price').value),
+            Quantity: parseInt(document.getElementById('Quantity').value),
+            Discount_Amount: parseFloat(document.getElementById('Discount_Amount').value),
+            Total_Amount: parseFloat(document.getElementById('Total_Amount').value),
+            Payment_Method: document.getElementById('Payment_Method').value,
+            Device_Type: document.getElementById('Device_Type').value,
+            Session_Duration_Minutes: parseInt(document.getElementById('Session_Duration_Minutes').value),
+            Pages_Viewed: parseInt(document.getElementById('Pages_Viewed').value),
+            Delivery_Time_Days: parseInt(document.getElementById('Delivery_Time_Days').value),
+            Customer_Rating: parseInt(document.getElementById('Customer_Rating').value)
+        };
+
+        // Validate numbers (extra client-side)
+        if (isNaN(data.Age) || data.Age < 18 || data.Age > 75) {
+            showError('Age must be between 18 and 75');
+            return;
+        }
+        if (isNaN(data.Unit_Price) || data.Unit_Price <= 0) {
+            showError('Unit Price must be positive');
+            return;
+        }
+        if (isNaN(data.Quantity) || data.Quantity < 1 || data.Quantity > 5) {
+            showError('Quantity must be between 1 and 5');
+            return;
+        }
+        if (isNaN(data.Discount_Amount) || data.Discount_Amount < 0) {
+            showError('Discount Amount cannot be negative');
+            return;
+        }
+        if (isNaN(data.Total_Amount) || data.Total_Amount <= 0) {
+            showError('Total Amount must be positive');
+            return;
+        }
+        if (isNaN(data.Session_Duration_Minutes) || data.Session_Duration_Minutes < 1) {
+            showError('Session Duration must be at least 1 minute');
+            return;
+        }
+        if (isNaN(data.Pages_Viewed) || data.Pages_Viewed < 1) {
+            showError('Pages Viewed must be at least 1');
+            return;
+        }
+        if (isNaN(data.Delivery_Time_Days) || data.Delivery_Time_Days < 1) {
+            showError('Delivery Time must be at least 1 day');
+            return;
+        }
+        if (isNaN(data.Customer_Rating) || data.Customer_Rating < 1 || data.Customer_Rating > 5) {
+            showError('Customer Rating must be between 1 and 5');
+            return;
+        }
+
+        // Show loading state (optional)
+        const submitBtn = form.querySelector('button');
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = '⏳ Predicting...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('http://localhost:8000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Prediction failed');
+            }
+
+            const result = await response.json();
+
+            // Display result
+            const isReturning = result.is_returning_customer;
+            predictionText.innerHTML = isReturning
+                ? '<span class="returning">✅ Returning Customer</span>'
+                : '<span class="new">❌ New Customer (Likely One‑Time Buyer)</span>';
+            confidenceText.innerHTML = `Confidence: ${(result.confidence * 100).toFixed(2)}%<br>
+                                        (Probability Returning: ${(result.probability_true * 100).toFixed(2)}%)`;
+            resultDiv.classList.add('visible');
+        } catch (err) {
+            showError(err.message);
+        } finally {
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+
+    function showError(message) {
+        errorMsg.innerText = message;
+        resultDiv.classList.add('visible');
+        predictionText.innerHTML = '';
+        confidenceText.innerHTML = '';
+    }
+</script>
+</body>
+</html>
