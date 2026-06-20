@@ -218,3 +218,4 @@ def predict_fruit_name_raw(input_data: FruitFeaturesRaw):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+# to run live on (app.netlify.com/drop)  https://glowing-bavarois-ffffcd.netlify.app/ password is My-Drop-Site
